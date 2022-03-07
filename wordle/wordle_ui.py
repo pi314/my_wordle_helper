@@ -1,6 +1,7 @@
 import readline
 
 import datetime
+import random
 import re
 import sys
 
@@ -18,6 +19,8 @@ class WordleUIGlobalVars:
         self.game_end = False
         self.secret = None
         self.ask_one = False
+        self.auto = False
+        self.helper_guess = None
 
 wordle_ui = WordleUIGlobalVars()
 
@@ -87,7 +90,10 @@ def render_ui():
     else:
         print('helper: {} candidates'.format(len(wordle_helper.candidate_set)))
 
-    if helper_access_type == 'guessing':
+    if helper_access_type == 'guess':
+        wordle_ui.helper_guess = random.choice(list(helper_assess_result))
+
+    elif helper_access_type == 'guessing':
         helper_guess = None
         helper_E = 0
         for tag, *value in helper_assess_result:
@@ -101,6 +107,8 @@ def render_ui():
 
         print('\r' + (' ' * 80), end='')
         print('\rhelper: guess={}, E={}'.format(helper_guess, helper_E), end='')
+
+        wordle_ui.helper_guess = random.choice(list(helper_guess))
 
     else:
         print('helper:', helper_access_type, helper_assess_result)
@@ -145,12 +153,19 @@ def loop():
     while not wordle_ui.game_end:
         render_ui()
 
-        guess = input('Guess> ').strip()
+        if wordle_ui.auto:
+            guess = wordle_ui.helper_guess
+            wordle_ui.ask_one = True
+        else:
+            guess = input('Guess> ').strip()
 
         wordle_ui.info = guess
 
         if not guess:
             wordle_ui.ask_one = True
+
+        elif guess in (':auto', 'gogo', ':gogo'):
+            wordle_ui.auto = True
 
         elif guess in ('exit', ':exit'):
             game_end = True
