@@ -23,18 +23,8 @@ wordle_ui = WordleUIGlobalVars()
 
 
 def render_keyboard():
-    if wordle_ui.keyboard_layout.upper() == 'QWERTY':
-        keyboard_template = '\n'.join([
-            '╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗',
-            '║{Q}│{W}│{E}│{R}│{T}│{Y}│{U}│{I}│{O}│{P}║',
-            '╟┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──╢',
-            '║│{A}│{S}│{D}│{F}│{G}│{H}│{J}│{K}│{L}│  ║',
-            '║└─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴──╢',
-            '║  │{Z}│{X}│{C}│{V}│{B}│{N}│{M}│ Wordle ║',
-            '╚══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╧════════╝',
-        ])
 
-    elif wordle_ui.keyboard_layout.upper() == 'DVORAK':
+    if wordle_ui.keyboard_layout.upper() == 'DVORAK':
         keyboard_template = '\n'.join([
             '╔══════════╤═══╤═══╤═══╤═══╤═══╤═══╤═══╤══╗',
             '║  Wordle  │{P}│{Y}│{F}│{G}│{C}│{R}│{L}│  ║',
@@ -46,7 +36,15 @@ def render_keyboard():
         ])
 
     else:
-        raise Exception('Invalid keyboard layout: ' + layout)
+        keyboard_template = '\n'.join([
+            '╔═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╤═══╗',
+            '║{Q}│{W}│{E}│{R}│{T}│{Y}│{U}│{I}│{O}│{P}║',
+            '╟┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──┴┬──╢',
+            '║│{A}│{S}│{D}│{F}│{G}│{H}│{J}│{K}│{L}│  ║',
+            '║└─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴─┬─┴───┴──╢',
+            '║  │{Z}│{X}│{C}│{V}│{B}│{N}│{M}│ Wordle ║',
+            '╚══╧═══╧═══╧═══╧═══╧═══╧═══╧═══╧════════╝',
+        ])
 
     print(keyboard_template.format(**{key: render_keycap(key, hit) for key, hit in wordle_ui.keycap_hit.items()}))
 
@@ -165,6 +163,9 @@ def loop():
             result = wordle_ui.secret.match(guess)
             add_guess_result(guess, result)
 
+            if result == 'NNNNN':
+                wordle_ui.info = 'Invalid guess: ' + guess
+
         else:
             wordle_ui.info = 'Invalid guess: ' + guess
 
@@ -193,7 +194,5 @@ def main():
 
     wordle_ui.title = wordle_ui.secret.title
     wordle_ui.info = str(wordle_ui.secret.words_loaded) + ' words loaded'
-    # wordle_ui.helper_message = str(len(wordle_helper.candidates)) + ' candidates left'
-    # wordle_ui.helper_status = wordle_helper.status()
 
     loop()
