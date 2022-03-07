@@ -4,6 +4,10 @@ My Wordle Helper
 
 My wordle Python implementation and a built in helper.
 
+.. code:: sh
+
+   $ python -m wordle
+
 The helper's algorithm was from 3B1B's `Solving Wordle using information theory [v68zYyaEmEA] <https://www.youtube.com/watch?v=v68zYyaEmEA>`_ .
 
 
