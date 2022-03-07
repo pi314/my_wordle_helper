@@ -92,6 +92,7 @@ def render_ui():
 
     if helper_access_type == 'guess':
         wordle_ui.helper_guess = random.choice(list(helper_assess_result))
+        print('helper: guess={}'.format(wordle_ui.helper_guess))
 
     elif helper_access_type == 'guessing':
         helper_guess = None

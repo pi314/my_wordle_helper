@@ -63,11 +63,11 @@ def add_guess_result(guess, result):
 
 
 def consult(ask):
-    # if len(history) == 0:
-    #     return ('guess', {'aloes', 'stoae', 'orate', 'crane'})
+    if len(history) == 0:
+        return ('guess', {'aloes', 'stoae', 'orate', 'crane'})
 
-    # if len(candidate_set) in (1, 2):
-    #     return ('guess', candidate_set)
+    if len(candidate_set) in (1, 2):
+        return ('guess', candidate_set)
 
     if ask == 'guess':
         def gen():
