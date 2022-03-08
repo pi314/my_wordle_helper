@@ -9,6 +9,9 @@ from . import wordle_helper
 from .wordle_secret import WordleSecret
 
 
+black = lambda x: '\033[1;30m' + x + '\033[m'
+
+
 class WordleUIGlobalVars:
     def __init__(self):
         self.title = 'WordleUI'
@@ -26,7 +29,6 @@ wordle_ui = WordleUIGlobalVars()
 
 
 def render_keyboard():
-
     if wordle_ui.keyboard_layout.upper() == 'DVORAK':
         keyboard_template = '\n'.join([
             '╔══════════╤═══╤═══╤═══╤═══╤═══╤═══╤═══╤══╗',
@@ -116,6 +118,14 @@ def render_ui():
 
     print()
 
+    print('Commands:')
+    print('    (enter)', black(': ask helper to take a guess'))
+    print('    :auto  ', black(': let helper to finish the whole game'))
+    print('    :exit  ', black(': exit'))
+    print('    :dvorak', black(': change keyboard layout to Dvorak'))
+    print('    :qwerty', black(': change keyboard layout to Qwerty'))
+    print('    :how {word}', black(': calculate the Entropy of {word}'))
+    print()
     print('[info]', wordle_ui.info)
     print()
 
@@ -160,7 +170,8 @@ def loop():
         else:
             guess = input('Guess> ').strip()
 
-        wordle_ui.info = guess
+        if guess:
+            wordle_ui.info = guess
 
         if not guess:
             wordle_ui.ask_one = True
@@ -174,6 +185,10 @@ def loop():
         elif guess in (':dvorak', ':qwerty'):
             wordle_ui.keyboard_layout = guess.lstrip(':')
 
+        elif guess.startswith(':how '):
+            w = guess.split()[1]
+            wordle_ui.info = 'E({}) = {}'.format(w, wordle_helper.entropy(w))
+
         elif len(guess) == 5:
             wordle_ui.info = 'Guess: ' + guess
             result = wordle_ui.secret.match(guess)
@@ -181,6 +196,9 @@ def loop():
 
             if result == 'NNNNN':
                 wordle_ui.info = 'Invalid guess: ' + guess
+
+        elif guess.startswith(':'):
+            wordle_ui.info = 'Invalid command: ' + guess
 
         else:
             wordle_ui.info = 'Invalid guess: ' + guess

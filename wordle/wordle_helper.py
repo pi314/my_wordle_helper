@@ -63,32 +63,22 @@ def add_guess_result(guess, result):
 
 
 def consult(ask):
-    if len(history) == 0:
-        return ('guess', {'aloes', 'stoae', 'orate', 'crane'})
+    # if len(history) == 0:
+    #     return ('guess', {'aloes', 'stoae', 'orate', 'crane'})
 
     if len(candidate_set) in (1, 2):
         return ('guess', candidate_set)
 
     if ask == 'guess':
+        if len(history) == 0:
+            return ('guess', {'tares'})
+
         def gen():
             word_set_size = len(word_set)
-            candidate_num = len(candidate_set)
             best_guess = []
             best_E = 0.0
             for idx, guess in enumerate(word_set):
-                E = 0.0
-
-                match_count = {m: 0 for m in product('Oo.', repeat=5)}
-                for c in candidate_set:
-                    match_count[match(c, guess)] += 1
-
-                for k, v in match_count.items():
-                    if v == 0:
-                        continue
-
-                    E += v * math.log2(candidate_num / v)
-
-                E /= candidate_num
+                E = entropy(guess)
 
                 if E == best_E:
                     best_guess.append(guess)
@@ -104,6 +94,28 @@ def consult(ask):
         return ('guessing', gen())
 
     else:
+        if len(history) == 0:
+            return ('cost', 1)
+
         return ('cost', len(word_set) * (len(candidate_set) + len(list(product('Oo.', repeat=5)))))
 
     return ('error', {'error'})
+
+
+def entropy(guess):
+    candidate_num = len(candidate_set)
+
+    E = 0.0
+
+    match_count = {m: 0 for m in product('Oo.', repeat=5)}
+    for c in candidate_set:
+        match_count[match(c, guess)] += 1
+
+    for k, v in match_count.items():
+        if v == 0:
+            continue
+
+        E += v * math.log2(candidate_num / v)
+
+    E /= candidate_num
+    return E
