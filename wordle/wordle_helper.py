@@ -34,11 +34,17 @@ def filter_with_guess_result(guess, match_result):
 
 def match(word, guess):
     result = ''
-    for (w, g) in zip(word, guess):
-        if w == g:
+
+    buf_guess = list(guess)
+    buf_word = list(word)
+    for i in range(len(guess)):
+        if buf_guess[i] == buf_word[i]:
             result += 'O'
-        elif g in word:
+
+        elif buf_guess[i] in buf_word:
             result += 'o'
+            buf_word[buf_word.index(buf_guess[i])] = '.'
+
         else:
             result += '.'
 

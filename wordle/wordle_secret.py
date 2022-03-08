@@ -60,13 +60,27 @@ class WordleSecret:
             return 'NNNNN'
 
         ret = ''
-        for (s, g) in zip(self.secret, guess):
-            if s == g:
+
+        buf_guess = list(guess)
+        buf_secret = list(self.secret)
+        for i in range(len(guess)):
+            if buf_guess[i] == buf_secret[i]:
                 ret += 'O'
-            elif g in self.secret:
+
+            elif buf_guess[i] in buf_secret:
                 ret += 'o'
+                buf_secret[buf_secret.index(buf_guess[i])] = '.'
+
             else:
                 ret += 'X'
+
+        # for (g, s) in zip(guess, self.secret):
+        #     if g == s:
+        #         ret += 'O'
+        #     elif g in self.secret:
+        #         ret += 'o'
+        #     else:
+        #         ret += 'X'
 
         return ret
 
