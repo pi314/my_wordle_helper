@@ -4,6 +4,8 @@ My Wordle Helper
 
 My wordle Python implementation and a built in helper.
 
+Need Python3 or above.
+
 .. code:: sh
 
    $ python -m wordle
