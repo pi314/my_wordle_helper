@@ -144,8 +144,7 @@ def add_guess_result(guess, result):
     else:
         wordle_ui.history[-1] = (guess, result)
 
-    if result != 'NNNNN':
-        wordle_helper.add_guess_result(guess, result)
+    wordle_helper.add_guess_result(guess, result)
 
     score = dict(zip(['?', 'N', 'X', 'o', 'O'], [0, 0, 1, 2, 3]))
 
