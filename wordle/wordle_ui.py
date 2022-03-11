@@ -207,6 +207,13 @@ def loop():
 
 
 def main():
+    if ('-h' in sys.argv) or ('--help' in sys.argv):
+        print('$ wordle               ' + black('# play a random wordle (only from past)'))
+        print('$ wordle .             ' + black("# play today's wordle"))
+        print('$ wordle 2021/06/19    ' + black('# play 2021/06/19 wordle'))
+        print('$ wordle 123           ' + black('# play wordle #123'))
+        exit(1)
+
     if len(sys.argv) == 2:
         key = sys.argv[1].lower()
 
